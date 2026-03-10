@@ -216,11 +216,14 @@ __marimo__/
 .DS_Store
 
 # dataset
-data/
-datasets/
 *.tif
 *.xml
 *.gz
+
+# ignore large dataset files
+data/raw/*
+data/intermediate/*
+data/processed/*
 
 # index files
 *.index
