@@ -11,8 +11,8 @@ The challenge is that historic newspapers exist at massive scale, spanning milli
 
 The Library of Congress was chosen for this project because of:
 
-- the large scale of available historical records  
-- the high-quality digitization process used for archival preservation  
+- the large scale of available historical records
+- the high-quality digitization process used for archival preservation
 - the public accessibility of many datasets through open programs
 
 These characteristics make LOC collections an excellent foundation for building large-scale text processing and search systems.
@@ -21,7 +21,7 @@ These characteristics make LOC collections an excellent foundation for building 
 
 Chronicling America provides access to its data in two primary ways:
 
-- Bulk dataset downloads, which allow researchers to download large portions of the archive for local processing.  
+- Bulk dataset downloads, which allow researchers to download large portions of the archive for local processing.
 - Public APIs, which allow programmatic access to individual newspaper pages and metadata.
 
 For this project, the bulk OCR dataset is used so the indexing pipeline can operate locally on large amounts of historical text.
@@ -51,9 +51,9 @@ OCR is the process of converting scanned documents or images of text into machin
 
 However, OCR is not perfectly accurate. Historical documents often contain challenges such as:
 
-- degraded paper quality  
-- unusual fonts  
-- scanning artifacts  
+- degraded paper quality
+- unusual fonts
+- scanning artifacts
 - complex page layouts
 
 ## Example:
@@ -67,7 +67,7 @@ These errors occur when the OCR system incorrectly interprets characters or spac
 ---
 # System Overview
 
-**Goal of the System**  
+**Goal of the System**
 The goal of this system is to build a searchable archive of historical newspapers published between 1890 and 1950.
 The dataset contains a large collection of OCR-extracted newspaper pages, which requires efficient processing and indexing techniques.
 
@@ -90,9 +90,9 @@ The Document Parser is responsible for ingesting the dataset and converting each
 
 During this stage the system
 
-- reads OCR text files  
-- extracts metadata from the file path (date, newspaper ID, page number)  
-- converts each page into a structured JSON document  
+- reads OCR text files
+- extracts metadata from the file path (date, newspaper ID, page number)
+- converts each page into a structured JSON document
 - performs basic normalization of the text
 
 
@@ -116,10 +116,10 @@ During this stage the system
 
 The text processing stage prepares the raw text for indexing. This includes several normalization steps that reduce noise and standardize the data.
 
-- Typical preprocessing steps include:  
-- converting text to lowercase  
-- removing punctuation  
-- splitting text into tokens (words)  
+- Typical preprocessing steps include:
+- converting text to lowercase
+- removing punctuation
+- splitting text into tokens (words)
 - optionally removing common stopwords
 
 The result of this stage is a stream of tokens associated with their document identifiers, which will be used to construct the index.
@@ -130,7 +130,7 @@ The Index Builder constructs the inverted index using a MapReduce3-style pipelin
 
 The indexing process consists of three main stages:
 
-**Map Stage**  
+**Map Stage**
 Each document is processed and converted into a sequence of tokens associated with the document identifier.
 
 Example output:
@@ -141,14 +141,14 @@ Example output:
 
 `(today, doc1, position)`
 
-**Shuffle Stage**  
+**Shuffle Stage**
 The system groups identical tokens together so that all occurrences of the same term are processed collectively.
 
 Example:
 
 `War ~> [(doc1, 1), (doc4, 4), (doc19, 2)]`
 
-**Reduce Stage**  
+**Reduce Stage**
 The reduce stage constructs the postings lists for each term. These lists contain the identifiers of all documents in which the term appears.
 ```text
 war ~> [
@@ -161,7 +161,7 @@ war ~> [
 ```
 The resulting index structures are then written to disk for later use by the search engin
 
-**Inverted Index (data structure):** 
+**Inverted Index (data structure):**
 
 A naive approach to storing documents would use a key-value structure such as:
 
@@ -171,7 +171,7 @@ doc_id ~> document_text
 
 However, searching this structure would require scanning every document to determine whether it contains a given term. This approach becomes extremely inefficient for large datasets.
 
-Instead, search engines use an inverted index.  
+Instead, search engines use an inverted index.
 An inverted index maps each term to the list of documents in which the term appears.
 
 Example documents:
@@ -196,12 +196,12 @@ The inverted index representation becomes:
 
 This structure allows the search engine to quickly locate all documents containing a given term without scanning the entire corpus.
 
-**Index Storage on Disk**  
+**Index Storage on Disk**
 Once the inverted index is constructed, it must be stored efficiently on disk so that the search engine can access it quickly during query execution.
 
 The index is typically divided into several components.
 
-**Lexicon**  
+**Lexicon**
 The lexicon is a dictionary that maps each term to the location of its postings list within the postings file.
 
 Example:
@@ -212,7 +212,7 @@ Example:
 
 The offset points to the position in the postings file where the list of documents for that term is stored.
 
-**Postings Lists**  
+**Postings Lists**
 The postings lists store the document identifiers associated with each term.
 
 Example:
@@ -225,20 +225,20 @@ These lists may also store additional information such as term frequency or posi
 
 The system also stores metadata about each document, such as:
 
-- document identifier  
-- publication date  
-- newspaper title  
+- document identifier
+- publication date
+- newspaper title
 - page number
 
 This metadata allows the search engine to return meaningful results to the user.
 
-**Search Engine**  
+**Search Engine**
 The search engine component processes user queries and retrieves the most relevant documents from the index.
 
-1. Load the index into memory  
-2. Tokenize the user query  
-3. Retrieve postings lists for query terms  
-4. Score documents using a ranking algorithm  
+1. Load the index into memory
+2. Tokenize the user query
+3. Retrieve postings lists for query terms
+4. Score documents using a ranking algorithm
 5. Return the top-k results
 
 For ranking, the system uses the BM25 scoring algorithm, which is widely used in modern search engines to estimate the relevance of documents with respect to a query.
@@ -256,7 +256,7 @@ Instead, the pipeline constructs an inverted index, which maps each term to the 
 
 The pipeline follows a MapReduce-style architecture, transforming raw documents into index structures through several stages:
 
-documents ~> tokens ~> grouped terms ~> postings lists  
+documents ~> tokens ~> grouped terms ~> postings lists
 This transformation enables fast lookup of documents containing specific words or phrases.
 
 ## Documents Input
@@ -273,10 +273,10 @@ page
 text
 ```
 
-- doc_id: uniquely identifies the page  
-- newspaper_id: identifies the publication  
-- date: represents the publication date  
-- page: represents the page number within the issue  
+- doc_id: uniquely identifies the page
+- newspaper_id: identifies the publication
+- date: represents the publication date
+- page: represents the page number within the issue
 - text: contains the OCR-extracted content of the page
 
 These documents become the input for the indexing pipeline.
@@ -287,9 +287,9 @@ The Map stage is the first step in building the inverted index. The goal of this
 
 During this stage, the system performs the following steps:
 
-- read document text  
-- tokenize words  
-- normalize tokens  
+- read document text
+- tokenize words
+- normalize tokens
 - emit (term, doc_id, position) pairs
 
 Document:
@@ -320,9 +320,9 @@ By organizing identical terms together, the shuffle stage prepares the data for 
 
 The Reduce stage converts grouped terms into postings lists, which form the core of the inverted index.
 
-- For each term, the reduce stage:  
-- processes the grouped document identifiers  
-- constructs a list of documents containing that term  
+- For each term, the reduce stage:
+- processes the grouped document identifiers
+- constructs a list of documents containing that term
 - optionally records additional statistics such as term frequency
 
 Example output:
@@ -349,15 +349,15 @@ The index is typically stored in structured files such as:
 postings.bin
 ```
 
-Additional structures, such as lexicons or metadata files, may also be created to allow efficient lookup of terms within the postings file.  
+Additional structures, such as lexicons or metadata files, may also be created to allow efficient lookup of terms within the postings file.
 Persisting the index to disk allows the search engine to load and query the index without rebuilding it each time the system starts.
 
 ## Scalability Considerations
 
 Processing millions of documents can exceed the memory limits of a single machine. Therefore, the indexing pipeline must consider techniques that allow the system to scale Possible approaches include:
 
-- external sorting5, which allows large datasets to be processed using disk-based sorting  
-- segment merging6, where smaller index segments are combined into larger ones  
+- external sorting5, which allows large datasets to be processed using disk-based sorting
+- segment merging6, where smaller index segments are combined into larger ones
 - distributed processing7, which enables multiple machines to process different portions of the dataset
 
 These techniques allow the system to handle large document collections while maintaining efficient indexing performance.
@@ -380,9 +380,9 @@ The query entering the pipeline undergoes the same preprocessing steps that were
 
 The query processing stage performs the following steps:
 
-- convert text to lowercase  
-- remove punctuation  
-- tokenize the query into words  
+- convert text to lowercase
+- remove punctuation
+- tokenize the query into words
 - optionally remove stopwords
 
 Example Query:
@@ -395,8 +395,8 @@ Normalizing the query in this way improves matching accuracy and ensures that th
 
 After preprocessing the query, each term is looked up in the lexicon, which maps terms to their corresponding postings lists in the index.
 
-The lexicon returns the offset location of the postings list for the requested term. Using this offset, the system loads the postings list from disk.  
-Example:  
+The lexicon returns the offset location of the postings list for the requested term. Using this offset, the system loads the postings list from disk.
+Example:
 
 `war ~> [doc1, doc5, doc19]`
 
@@ -420,8 +420,8 @@ These posting lists represent the documents that contain the queried terms and f
 
 After retrieving the postings lists, the system constructs a candidate document set containing all potential documents that may satisfy the query.
 
-Example query:  
-War europe 
+Example query:
+War europe
 
 Postings lists:
 
@@ -443,8 +443,8 @@ This system uses the BM25 ranking algorithm, a widely used scoring function in m
 
 BM25 evaluates document relevance using several factors:
 
-- term frequency (how often the term appears in the document)  
-- document length (to avoid favoring excessively long documents)  
+- term frequency (how often the term appears in the document)
+- document length (to avoid favoring excessively long documents)
 - inverse document frequency (how rare or informative a term is within the corpus)
 
 For example, some documents may repeat certain words excessively in order to appear more relevant. BM25 reduces the impact of such repetition while giving more weight to informative terms that better represent the content of the document.
@@ -457,8 +457,8 @@ After scoring all candidate documents, the system selects the top-k results with
 
 The process involves:
 
-- scoring each candidate document  
-- sorting documents by score  
+- scoring each candidate document
+- sorting documents by score
 - returning the top-k highest scoring documents
 
 Example output:
@@ -484,10 +484,10 @@ Once the top-ranked documents are selected, the system retrieves the correspondi
 
 Each result may include information such as:
 
-- newspaper title  
-- publication date  
-- page number  
-- a short text snippet  
+- newspaper title
+- publication date
+- page number
+- a short text snippet
 - a link to the OCR page
 
 Example result:
@@ -517,18 +517,18 @@ For example, one of the documents contained the following OCR errors:
 
 Such errors can prevent queries from matching the correct terms in the index. Future improvements to address these issues may include:
 
-- fuzzy search, allowing approximate matches for misspelled terms  
-- spelling correction, to normalize incorrectly recognized words  
+- fuzzy search, allowing approximate matches for misspelled terms
+- spelling correction, to normalize incorrectly recognized words
 - edit-distance matching, to retrieve words that are similar to the query
 
 These techniques can improve recall when searching noisy OCR datasets.
 
 ## Compression
 
-Postings lists can become very large as the number of indexed documents increases. Without compression, storing the inverted index may require significant disk space and memory.  
+Postings lists can become very large as the number of indexed documents increases. Without compression, storing the inverted index may require significant disk space and memory.
 To reduce index size and improve performance, compression techniques can be applied to the postings lists. Possible approaches include:
 
-- gap encoding, which stores differences between sorted document identifiers instead of the full values  
+- gap encoding, which stores differences between sorted document identifiers instead of the full values
 - variable integer encoding, which represents small numbers using fewer bytes
 
 These techniques reduce storage requirements and can improve query performance by reducing disk I/O.
@@ -539,8 +539,8 @@ As the dataset grows, indexing and querying may exceed the capacity of a single 
 
 Future improvements could include:
 
-- distributed indexing, allowing multiple machines to build the index in parallel  
-- sharded index segments, where different parts of the index are stored across multiple nodes  
+- distributed indexing, allowing multiple machines to build the index in parallel
+- sharded index segments, where different parts of the index are stored across multiple nodes
 - parallel query processing, enabling queries to be executed across multiple shards simultaneously
 
 These approaches allow the system to scale to much larger datasets.
@@ -551,9 +551,9 @@ While BM25 provides strong baseline performance for document ranking, more advan
 
 Potential improvements include:
 
-- learning-to-rank models, which use machine learning to optimize ranking based on training data  
-- query expansion, which adds related terms to improve recall  
-- semantic search, which captures the meaning of queries rather than relying solely on keyword matching  
+- learning-to-rank models, which use machine learning to optimize ranking based on training data
+- query expansion, which adds related terms to improve recall
+- semantic search, which captures the meaning of queries rather than relying solely on keyword matching
 - hybrid retrieval, combining traditional lexical search with vector-based semantic retrieval
 
 These enhancements could improve result relevance, especially for complex or ambiguous queries.
@@ -571,10 +571,10 @@ Through evaluation, we can monitor the system’s behavior, identify performance
 
 The evaluation focuses on several key aspects:
 
-- Indexing performance, including indexing time, number of documents processed, and memory usage  
-- Query performance, including query latency, top-k retrieval speed, and average response time  
-- System correctness, ensuring that queries return the expected documents  
-- Retrieval quality, measuring how accurately the system retrieves relevant historical documents  
+- Indexing performance, including indexing time, number of documents processed, and memory usage
+- Query performance, including query latency, top-k retrieval speed, and average response time
+- System correctness, ensuring that queries return the expected documents
+- Retrieval quality, measuring how accurately the system retrieves relevant historical documents
 - These metrics provide a comprehensive view of the system’s efficiency and effectiveness.
 
 ## Dataset Size
@@ -583,9 +583,9 @@ The dataset size will be monitored and updated as the project evolves. Because t
 
 As the dataset grows, the following metrics will be tracked:
 
-- total number of indexed documents  
-- average number of tokens per document  
-- total number of processed tokens  
+- total number of indexed documents
+- average number of tokens per document
+- total number of processed tokens
 - total index size on disk
 
 Example metrics:
@@ -602,8 +602,8 @@ Indexing performance measures how efficiently the system constructs the inverted
 
 Key metrics include:
 
-- total indexing time, representing how long it takes to build the index  
-- documents processed per second, indicating the throughput of the indexing pipeline  
+- total indexing time, representing how long it takes to build the index
+- documents processed per second, indicating the throughput of the indexing pipeline
 - memory usage, measuring the system’s resource consumption during indexing
 
 
@@ -615,8 +615,8 @@ Query latency measures how long it takes for the search engine to process a user
 
 Important metrics include:
 
-- average query response time, representing the typical query execution time  
-- worst-case response time, measuring performance under less favorable conditions  
+- average query response time, representing the typical query execution time
+- worst-case response time, measuring performance under less favorable conditions
 - top-k retrieval speed, indicating how quickly the system can identify the highest ranked results
 
 Example performance:
@@ -627,7 +627,7 @@ top-10 results retrieval
 
 Low query latency is essential for providing a responsive search experience.
 ```
-## Retrieval Quality 
+## Retrieval Quality
 
 In addition to system performance, it is important to evaluate the quality of the search results.
 
@@ -637,7 +637,7 @@ MAP evaluates how well the ranking algorithm orders relevant documents near the 
 
 By measuring retrieval quality, we can assess whether the search engine successfully retrieves meaningful historical newspaper pages in response to user queries.
 
-## 
+##
 
 ## Conclusion
 
@@ -649,4 +649,4 @@ The system demonstrates how large-scale textual datasets can be processed and in
 
 Although the system provides a functional search engine for historical newspaper archives, several areas for improvement remain. Future work may include enhanced OCR error handling, improved ranking models, index compression techniques, and distributed indexing architectures. These improvements would allow the system to scale further and improve the accuracy and usability of the search results.
 
-Overall, this project illustrates how modern information retrieval techniques can be applied to historical datasets, enabling researchers, historians, and the public to explore archival newspaper collections more efficiently.  
+Overall, this project illustrates how modern information retrieval techniques can be applied to historical datasets, enabling researchers, historians, and the public to explore archival newspaper collections more efficiently.
