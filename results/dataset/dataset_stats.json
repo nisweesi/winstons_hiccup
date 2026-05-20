@@ -1,0 +1,11 @@
+{
+  "corpus_slice": "loc_ocr_14_archives_v1",
+  "num_archives": 14,
+  "compressed_size_bytes": 7197174833,
+  "extracted_size_bytes": 67346825074,
+  "num_ocr_pages": 71907,
+  "date_min": "1776-01-01",
+  "date_max": "1950-08-25",
+  "avg_chars_per_page": 25880.526861084458,
+  "avg_tokens_per_page": 4531.49091187228
+}
