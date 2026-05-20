@@ -20,16 +20,16 @@ The challenge is that historic newspapers exist at massive scale, spanning milli
 **Estimated Time:** 1 day
 
 **Tasks:**
-- Create a repository
-- Create the project structure
-- Set up a virtual environment
+- ~~Create a repository~~
+- ~~Create the project structure~~
+- ~~Set up a virtual environment~~ deprecating to uv
 - Choose coding standards
-- Create a config file for paths and experiment settings
+- ~~Create a config file for paths and experiment settings~~
 
 **Deliverables:**
-- Working repo
-- Config file
-- README file
+[x] Working repo
+[x] Config file
+[x] README file
 
 **Success criteria:**
 - Project runs locally
@@ -41,9 +41,9 @@ The challenge is that historic newspapers exist at massive scale, spanning milli
 **Estimated Time:** 1 to 2 days
 
 **Tasks:**
-- Parse metadata from OCR paths
-- Count files/pages
-- Inspect text quality
+- ~~Parse metadata from OCR paths~~
+- ~~Count files/pages~~
+- ~~Inspect text quality~~
 - Compute token counts on a sample
 - Define the first corpus slice we are going to index
 
@@ -55,8 +55,8 @@ The challenge is that historic newspapers exist at massive scale, spanning milli
 
 **Success criteria:**
 - Know exactly how many pages we have
-- We can extract the metadata (doc\_id, newspaper\_id, date, page)
-- Have a documented sample of OCR noise
+-  We can extract the metadata (doc\_id, newspaper\_id, date, page)
+-  Have a documented sample of OCR noise
 
 ## Milestone 2 \- Document parsing pipeline
 
@@ -65,15 +65,15 @@ The challenge is that historic newspapers exist at massive scale, spanning milli
 **Estimated Time:** 1 to 2 days
 
 **Tasks:**
-- Read OCR text files
-- Extract metadata from path
-- Convert each page into a structured JSON record
-- Write JSONL output
+- ~~Read OCR text files~~
+- ~~Extract metadata from path~~
+- ~~Convert each page into a structured JSON record~~
+- ~~Write JSONL output~~
 
 **Deliverables:**
-- Parsed\_documents.jsonl
-- Parser module
-- Validation script
+[x] Parsed\_documents.jsonl
+[x] Parser module
+[x] Validation script
 
 Success criteria:
 - every OCR page becomes one valid structured document
@@ -83,17 +83,17 @@ Success criteria:
 **Estimated Time:** 1 day
 
 **Tasks:**
-- Lowercase
-- Strip punctuation
-- Normalize white space
-- Tokenize text
-- Remove stop words
-- Preserve positions
+- ~~Lowercase~~
+- ~~Strip punctuation~~
+- ~~Normalize white space~~
+- ~~Tokenize text~~
+- ~~Remove stop words~~
+- ~~Preserve positions~~
 
 **Deliverables:**
-- Tokenization module
-- Tokenized sample output
-- Unit tests on a few samples
+[x] Tokenization module
+[x] Tokenized sample output
+[ ] Unit tests on a few samples
 
 **Success criteria:**
 - same preprocessing is used for both documents and queries
