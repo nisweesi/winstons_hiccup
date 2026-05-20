@@ -27,9 +27,9 @@ The challenge is that historic newspapers exist at massive scale, spanning milli
 - ~~Create a config file for paths and experiment settings~~
 
 **Deliverables:**
-[x] Working repo
-[x] Config file
-[x] README file
+- [x] Working repo
+- [x] Config file
+- [x] README file
 
 **Success criteria:**
 - Project runs locally
@@ -48,10 +48,10 @@ The challenge is that historic newspapers exist at massive scale, spanning milli
 - Define the first corpus slice we are going to index
 
 **Deliverables:**
-- dataset\_manifest.csv
-- dataset\_stats.json
-- Sample\_docs.jsonl
-- dataset\_profile.md
+- [ ] dataset\_manifest.csv
+- [ ] dataset\_stats.json
+- [ ] Sample\_docs.jsonl
+- [ ] dataset\_profile.md
 
 **Success criteria:**
 - Know exactly how many pages we have
@@ -71,9 +71,9 @@ The challenge is that historic newspapers exist at massive scale, spanning milli
 - ~~Write JSONL output~~
 
 **Deliverables:**
-[x] Parsed\_documents.jsonl
-[x] Parser module
-[x] Validation script
+- [x] Parsed\_documents.jsonl
+- [x] Parser module
+- [x] Validation script
 
 Success criteria:
 - every OCR page becomes one valid structured document
@@ -91,9 +91,9 @@ Success criteria:
 - ~~Preserve positions~~
 
 **Deliverables:**
-[x] Tokenization module
-[x] Tokenized sample output
-[ ] Unit tests on a few samples
+- [x] Tokenization module
+- [x] Tokenized sample output
+- [ ] Unit tests on a few samples
 
 **Success criteria:**
 - same preprocessing is used for both documents and queries
